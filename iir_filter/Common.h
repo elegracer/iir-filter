@@ -23,25 +23,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  **/
-
-#ifndef IIR_H
-#define IIR_H
+#ifndef IIR1_COMMON_H
+#define IIR1_COMMON_H
 
 //
-// Include this file in your application to get everything
+// This must be the first file included in every DspFilters header and source
 //
 
-#include "iir_filter/Common.h"
+#ifdef _MSC_VER
+#  pragma warning (disable: 4100)
+#endif
 
-#include "iir_filter/Biquad.h"
-#include "iir_filter/Cascade.h"
-#include "iir_filter/PoleFilter.h"
-#include "iir_filter/State.h"
+// This exports the classes/structures to the windows DLL
+#ifdef _WIN32
+#define DllExport   __declspec( dllexport )
+#define _CRT_SECURE_NO_WARNINGS
+#else
+#define DllExport
+#endif
 
-#include "iir_filter/Butterworth.h"
-#include "iir_filter/ChebyshevI.h"
-#include "iir_filter/ChebyshevII.h"
-#include "iir_filter/Custom.h"
-#include "iir_filter/RBJ.h"
+#include <stdlib.h>
+
+#include <cassert>
+#include <cfloat>
+#include <cmath>
+#include <complex>
+#include <cstring>
+#include <string>
+#include <limits>
+#include <vector>
+#include <stdexcept> // for invalid_argument
+
+static const char orderTooHigh[] = "Requested order is too high. Provide a higher order for the template.";
+
+#define DEFAULT_FILTER_ORDER 4
+
+/**
+ * @brief Throw invalid argument exception if exceptions are enabled, otherwise abort.
+ *
+ * @param msg Error message
+ */
+inline void throw_invalid_argument(const char* msg) {
+
+#ifndef IIR1_NO_EXCEPTIONS
+    throw std::invalid_argument(msg);
+#else
+    (void) msg; // Discard parameter
+    abort();
+#endif
+
+}
 
 #endif

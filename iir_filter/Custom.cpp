@@ -24,24 +24,34 @@
  * THE SOFTWARE.
  **/
 
-#ifndef IIR_H
-#define IIR_H
+#include "Common.h"
+#include "Custom.h"
 
-//
-// Include this file in your application to get everything
-//
+namespace Iir {
 
-#include "iir_filter/Common.h"
+namespace Custom {
 
-#include "iir_filter/Biquad.h"
-#include "iir_filter/Cascade.h"
-#include "iir_filter/PoleFilter.h"
-#include "iir_filter/State.h"
+void OnePole::setup (double scale,
+                     double pole,
+                     double zero)
+{
+  setOnePole (pole, zero);
+  applyScale (scale);
+}
 
-#include "iir_filter/Butterworth.h"
-#include "iir_filter/ChebyshevI.h"
-#include "iir_filter/ChebyshevII.h"
-#include "iir_filter/Custom.h"
-#include "iir_filter/RBJ.h"
+void TwoPole::setup (double scale,
+                     double poleRho,
+                     double poleTheta,
+                     double zeroRho,
+                     double zeroTheta)
+{
+  complex_t pole = std::polar (poleRho, poleTheta);
+  complex_t zero = std::polar (zeroRho, zeroTheta);
 
-#endif
+  setTwoPole (pole, zero, std::conj(pole), std::conj(zero));
+  applyScale (scale);
+}
+
+}
+
+}

@@ -23,29 +23,29 @@ else()
 endif()
 
 set(LIBSRC
-  iir/Biquad.cpp
-  iir/Butterworth.cpp
-  iir/Cascade.cpp
-  iir/ChebyshevI.cpp
-  iir/ChebyshevII.cpp
-  iir/Custom.cpp
-  iir/PoleFilter.cpp
-  iir/RBJ.cpp)
+  iir_filter/Biquad.cpp
+  iir_filter/Butterworth.cpp
+  iir_filter/Cascade.cpp
+  iir_filter/ChebyshevI.cpp
+  iir_filter/ChebyshevII.cpp
+  iir_filter/Custom.cpp
+  iir_filter/PoleFilter.cpp
+  iir_filter/RBJ.cpp)
 
 set(LIBINCLUDE
-  iir/Biquad.h
-  iir/Butterworth.h
-  iir/Cascade.h
-  iir/ChebyshevI.h
-  iir/ChebyshevII.h
-  iir/Common.h
-  iir/Custom.h
-  iir/Layout.h
-  iir/MathSupplement.h
-  iir/PoleFilter.h
-  iir/RBJ.h
-  iir/State.h
-  iir/Types.h)
+  iir_filter/Biquad.h
+  iir_filter/Butterworth.h
+  iir_filter/Cascade.h
+  iir_filter/ChebyshevI.h
+  iir_filter/ChebyshevII.h
+  iir_filter/Common.h
+  iir_filter/Custom.h
+  iir_filter/Layout.h
+  iir_filter/MathSupplement.h
+  iir_filter/PoleFilter.h
+  iir_filter/RBJ.h
+  iir_filter/State.h
+  iir_filter/Types.h)
 
 add_library(iir SHARED ${LIBSRC})
 add_library(iir::iir ALIAS iir)
@@ -71,8 +71,6 @@ install(TARGETS iir EXPORT iir-targets
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   PRIVATE_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/iir)
 
-configure_file(iir.pc.in iir.pc @ONLY)
-
 add_library(iir_static STATIC ${LIBSRC})
 add_library(iir::iir_static ALIAS iir_static)
 
@@ -80,7 +78,7 @@ target_include_directories(iir_static
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>      # for Iir.h
   PRIVATE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/iir>  # everything else
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/iir_filter>  # everything else
 )
 
 set_target_properties(iir_static PROPERTIES
