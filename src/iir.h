@@ -23,55 +23,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  **/
-#ifndef IIR1_COMMON_H
-#define IIR1_COMMON_H
 
-//
-// This must be the first file included in every DspFilters header and source
-//
+#pragma once
 
-#ifdef _MSC_VER
-#  pragma warning (disable: 4100)
-#endif
+#include "iir/common.h"
 
-// This exports the classes/structures to the windows DLL
-#ifdef _WIN32
-#define DllExport   __declspec( dllexport )
-#define _CRT_SECURE_NO_WARNINGS
-#else
-#define DllExport
-#endif
+#include "iir/biquad.h"
+#include "iir/cascade.h"
+#include "iir/pole_filter.h"
+#include "iir/state.h"
 
-#include <stdlib.h>
-
-#include <cassert>
-#include <cfloat>
-#include <cmath>
-#include <complex>
-#include <cstring>
-#include <string>
-#include <limits>
-#include <vector>
-#include <stdexcept> // for invalid_argument
-
-static const char orderTooHigh[] = "Requested order is too high. Provide a higher order for the template.";
-
-#define DEFAULT_FILTER_ORDER 4
-
-/**
- * @brief Throw invalid argument exception if exceptions are enabled, otherwise abort.
- *
- * @param msg Error message
- */
-inline void throw_invalid_argument(const char* msg) {
-
-#ifndef IIR1_NO_EXCEPTIONS
-    throw std::invalid_argument(msg);
-#else
-    (void) msg; // Discard parameter
-    abort();
-#endif
-
-}
-
-#endif
+#include "iir/butterworth.h"
+#include "iir/chebyshev_i.h"
+#include "iir/chebyshev_ii.h"
+#include "iir/custom.h"
+#include "iir/rbj.h"

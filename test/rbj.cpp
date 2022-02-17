@@ -1,4 +1,4 @@
-#include "Iir.h"
+#include "iir.h"
 
 #define _USE_MATH_DEFINES
 #include <stdio.h>
@@ -8,7 +8,7 @@
 
 int main(int, char**)
 {
-	Iir::RBJ::LowPass f;
+	IIR::RBJ::LowPass f;
 	const double samplingrate = 1000; // Hz
 	const double cutoff_frequency = 5; // Hz
 	const double qfactor = 1;
@@ -25,7 +25,7 @@ int main(int, char**)
 	fprintf(stderr, "%e\n", b);
 	assert_print(fabs(b) < 1E-15, "Lowpass value for t->inf to high!");
 
-	Iir::RBJ::BandStop bs;
+	IIR::RBJ::BandStop bs;
 	const double center_frequency = 0.05;
 	const double frequency_width = 0.005;
 	bs.setupN(center_frequency, frequency_width);

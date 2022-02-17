@@ -1,102 +1,70 @@
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/Modules")
+project(iir-filter VERSION 2.0.0 LANGUAGES CXX)
 
-project(iir VERSION 1.9.1 LANGUAGES CXX)
+set(CMAKE_POLICY_DEFAULT_CMP0120 OLD)
+set(CMAKE_POLICY_DEFAULT_CMP0069 NEW)
 
-set(CMAKE_CXX_STANDARD 11)
+include(CMakeDependentOption)
 
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-  set(CMAKE_BUILD_TYPE "RelWithDebInfo")
+# ccache
+find_program(CCACHE_FOUND ccache)
+if(CCACHE_FOUND)
+    message(STATUS "Found CCache")
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+endif(CCACHE_FOUND)
+
+# set global cxx standard
+set(CMAKE_CXX_STANDARD 17)
+# always generate position independent code, no matter static or shared library
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+# disable cpp extensions
+set(CMAKE_CXX_EXTENSIONS OFF)
+# # link time optimization
+# set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+
+set(IIR_SOURCES
+    #
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir.h
+    #
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/biquad.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/biquad.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/butterworth.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/butterworth.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/cascade.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/cascade.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/chebyshev_i.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/chebyshev_i.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/chebyshev_ii.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/chebyshev_ii.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/common.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/custom.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/custom.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/layout.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/math_supplement.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/pole_filter.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/pole_filter.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/rbj.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/rbj.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/state.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/types.h
+)
+
+add_library(iir)
+target_sources(iir PRIVATE ${IIR_SOURCES})
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    target_compile_options(
+        iir PRIVATE -Qunused-arguments -mllvm -inline-threshold=5000 -fno-exceptions
+    )
 endif()
-
-cmake_policy(SET CMP0048 NEW) # set VERSION in project()
-cmake_policy(SET CMP0042 NEW) # enable MACOSX_RPATH by default
-
-include(GNUInstallDirs)
-add_subdirectory(test)
-add_subdirectory(demo)
-enable_testing ()
-
-if (MSVC)
-  add_compile_options(/W4)
-else()
-  add_compile_options(-Wall -Wconversion -Wextra -pedantic)
-endif()
-
-set(LIBSRC
-  iir_filter/Biquad.cpp
-  iir_filter/Butterworth.cpp
-  iir_filter/Cascade.cpp
-  iir_filter/ChebyshevI.cpp
-  iir_filter/ChebyshevII.cpp
-  iir_filter/Custom.cpp
-  iir_filter/PoleFilter.cpp
-  iir_filter/RBJ.cpp)
-
-set(LIBINCLUDE
-  iir_filter/Biquad.h
-  iir_filter/Butterworth.h
-  iir_filter/Cascade.h
-  iir_filter/ChebyshevI.h
-  iir_filter/ChebyshevII.h
-  iir_filter/Common.h
-  iir_filter/Custom.h
-  iir_filter/Layout.h
-  iir_filter/MathSupplement.h
-  iir_filter/PoleFilter.h
-  iir_filter/RBJ.h
-  iir_filter/State.h
-  iir_filter/Types.h)
-
-add_library(iir SHARED ${LIBSRC})
-add_library(iir::iir ALIAS iir)
 
 target_include_directories(iir
-  PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>      # for Iir.h
-  PRIVATE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/iir>  # everything else
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-set_target_properties(iir PROPERTIES
-  SOVERSION 1
-  VERSION ${PROJECT_VERSION}
-  PUBLIC_HEADER Iir.h
-  PRIVATE_HEADER "${LIBINCLUDE}")
+add_library(iir::iir ALIAS iir)
 
-install(TARGETS iir EXPORT iir-targets
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-  PRIVATE_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/iir)
-
-add_library(iir_static STATIC ${LIBSRC})
-add_library(iir::iir_static ALIAS iir_static)
-
-target_include_directories(iir_static
-  PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>      # for Iir.h
-  PRIVATE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/iir_filter>  # everything else
-)
-
-set_target_properties(iir_static PROPERTIES
-  POSITION_INDEPENDENT_CODE TRUE
-  VERSION ${PROJECT_VERSION}
-  PUBLIC_HEADER Iir.h
-  PRIVATE_HEADER "${LIBINCLUDE}")
-
-install(TARGETS iir_static EXPORT iir-targets
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-  PRIVATE_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/iir)
-
-install(EXPORT iir-targets
-  DESTINATION lib/cmake/iir
-  NAMESPACE iir::
-  FILE iir-config.cmake
-)
+add_subdirectory(test)
+add_subdirectory(examples)

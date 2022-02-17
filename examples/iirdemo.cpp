@@ -4,7 +4,7 @@
 //
 
 // This is the only include you need
-#include "Iir.h"
+#include "iir.h"
 
 #include <stdio.h>
 
@@ -18,7 +18,7 @@ int main(int, char**)
 	FILE *fimpulse = NULL;
 
 	// Butterworth lowpass
-	Iir::Butterworth::LowPass<order> f;
+	IIR::Butterworth::LowPass<order> f;
 	double cutoff_frequency = 100; // Hz
 	f.setup(samplingrate, cutoff_frequency);
 	fimpulse = fopen("lp.dat", "wt");
@@ -37,7 +37,7 @@ int main(int, char**)
 	// cutoff frequency. If Q=1/sqrt(2) then the transition
 	// has no resonance. The higher the Q-factor the higher
 	// the resonance.
-	Iir::RBJ::HighPass hp;
+	IIR::RBJ::HighPass hp;
 	const double hp_cutoff_frequency = 100;
 	const double hp_qfactor = 5;
 	hp.setup(samplingrate, hp_cutoff_frequency, hp_qfactor);
@@ -51,7 +51,7 @@ int main(int, char**)
 	}
 	fclose(fimpulse);
 
-	Iir::ChebyshevI::LowPass<8> lp_cheby1;
+	IIR::ChebyshevI::LowPass<8> lp_cheby1;
 	const float pass_ripple_db2 = 1; // dB
 	lp_cheby1.setup(samplingrate,
 		cutoff_frequency,
@@ -70,7 +70,7 @@ int main(int, char**)
 	// system one can use normalised
 	// frequencies from 0 to 1/2 (Nyquist)
 	// where the frequency is 1/samples.
-	Iir::ChebyshevII::HighPass<order> hp_cheby2;
+	IIR::ChebyshevII::HighPass<order> hp_cheby2;
 	double stop_ripple_dB = 60;
 	// Setting cutoff to normalised f=0.1
 	double normalised_cutoff_freq = 0.1;
@@ -87,7 +87,7 @@ int main(int, char**)
 	fclose(fimpulse);
 
 	// Bandstop filter with default order
-	Iir::Butterworth::BandStop<> bsn;
+	IIR::Butterworth::BandStop<> bsn;
 	const double norm_center_frequency = 0.1;
 	const double norm_frequency_width = 0.01;
 	bsn.setupN(norm_center_frequency, norm_frequency_width);
@@ -117,7 +117,7 @@ int main(int, char**)
 		 9.538657786383895054e-01}
 	};
 	const int nSOS = sizeof(coeff) / sizeof(coeff[0]);
-	Iir::Custom::SOSCascade<nSOS> cust(coeff);
+	IIR::Custom::SOSCascade<nSOS> cust(coeff);
 	fimpulse = fopen("ellip.dat", "wt");
 	for (int i = 0; i < 1000; i++)
 	{
@@ -137,7 +137,7 @@ int main(int, char**)
 {1.000000000000000000e+00,2.000000000000000000e+00,1.000000000000000000e+00,1.000000000000000000e+00,-1.179438547708672624e+00,5.264979795433866183e-01},
 	};
 	const int nSOS2 = sizeof(coeff2) / sizeof(coeff2[0]);
-	Iir::Custom::SOSCascade<nSOS2> cust2(coeff2);
+	IIR::Custom::SOSCascade<nSOS2> cust2(coeff2);
 	fimpulse = fopen("bessel.dat", "wt");
 	for (int i = 0; i < 1000; i++)
 	{

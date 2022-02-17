@@ -1,4 +1,4 @@
-#include "Iir.h"
+#include "iir.h"
 
 #include <stdio.h>
 
@@ -21,11 +21,11 @@ int main (int,char**)
 		 -1.605878925999785656e+00,
 		 9.538657786383895054e-01}};
 
-	Iir::Custom::SOSCascade<2> f(coeff);
+	IIR::Custom::SOSCascade<2> f(coeff);
 
 	double b = 0;
 	double b2 = 0;
-	for(int i=0;i<10000;i++) 
+	for(int i=0;i<10000;i++)
 	{
 		double a=0;
 		if (i==10) a = 1;

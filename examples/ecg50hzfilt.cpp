@@ -1,6 +1,6 @@
 // Usage Examples
 //
-#include "Iir.h"
+#include "iir.h"
 
 #include <stdio.h>
 
@@ -8,17 +8,17 @@ int main (int,char**)
 {
 	const float fs = 1000;
         const float mains = 50;
-	Iir::RBJ::IIRNotch iirnotch;
+	IIR::RBJ::IIRNotch iirnotch;
 	iirnotch.setup(fs,mains);
 
         const float ecg_max_f = 100;
-	Iir::Butterworth::LowPass<4> lp;
+	IIR::Butterworth::LowPass<4> lp;
 	lp.setup(fs,ecg_max_f);
 
 	FILE *finput = fopen("ecg50hz.dat","rt");
 	FILE *foutput = fopen("ecg_filtered.dat","wt");
 	// let's simulate incoming streaming data
-	for(;;) 
+	for(;;)
 	{
 		float a;
 		if (fscanf(finput,"%f\n",&a)<1) break;

@@ -29,7 +29,7 @@ can optimise both filter code and main program at the same time.
 ## C++ code
 Add the following include statement to your code:
 ```
-#include "Iir.h"
+#include "iir.h"
 ```
 
 The general coding approach is that first the filter is
@@ -44,7 +44,7 @@ commands. This prevents memory leaks and can be optimised at compile
 time. The `order` provided to the template (for example here for a
 lowpass filter):
 ```
-Iir::Butterworth::LowPass<order> f;
+IIR::Butterworth::LowPass<order> f;
 ```
 is used as the default order by the `setup` command below
 but can be overridden by a lower order if required.
@@ -74,7 +74,7 @@ The examples below are for lowpass filters:
 Standard filter suitable for most applications. Monotonic response.
 ```
 const int order = 4; // 4th order (=2 biquads)
-Iir::Butterworth::LowPass<order> f;
+IIR::Butterworth::LowPass<order> f;
 const float samplingrate = 1000; // Hz
 const float cutoff_frequency = 5; // Hz
 f.setup (samplingrate, cutoff_frequency);
@@ -87,7 +87,7 @@ f.setupN(norm_cutoff_frequency);
 2. Chebyshev Type I -- `ChebyshevI.h`
 With permissible passband ripple in dB.
 ```
-Iir::ChebyshevI::LowPass<order> f;
+IIR::ChebyshevI::LowPass<order> f;
 const float passband_ripple_in_db = 5;
 f.setup (samplingrate,
          cutoff_frequency,
@@ -102,7 +102,7 @@ f.setupN(norm_cutoff_frequency,passband_ripple_in_dB);
 3. Chebyshev Type II -- `ChebyshevII.h`
 With worst permissible stopband rejection in dB.
 ```
-Iir::ChebyshevII::LowPass<order> f;
+IIR::ChebyshevII::LowPass<order> f;
 double stopband_ripple_in_dB = 20;
 f.setup (samplingrate,
          cutoff_frequency,
@@ -116,7 +116,7 @@ f.setupN(norm_cutoff_frequency,stopband_ripple_in_dB);
 4. RBJ -- `RBJ.h`
 2nd order filters with cutoff and Q factor.
 ```
-Iir::RBJ::LowPass f;
+IIR::RBJ::LowPass f;
 const float cutoff_frequency = 100;
 const float Q_factor = 5;
 f.setup (samplingrate, cutoff_frequency, Q_factor);
@@ -154,7 +154,7 @@ const double coeff[][6] = {
 		 9.538657786383895054e-01}
 	};
 const int nSOS = sizeof(coeff) / sizeof(coeff[0]); // here: nSOS = 2 = order / 2
-Iir::Custom::SOSCascade<nSOS> cust(coeff);
+IIR::Custom::SOSCascade<nSOS> cust(coeff);
 ```
 
 ### Realtime filtering sample by sample

@@ -24,15 +24,15 @@
  * THE SOFTWARE.
  **/
 
-#ifndef IIR1_POLEFILTER_H
-#define IIR1_POLEFILTER_H
+#pragma once
 
-#include "Common.h"
-#include "MathSupplement.h"
-#include "Cascade.h"
-#include "State.h"
+#include "common.h"
 
-namespace Iir {
+#include "cascade.h"
+#include "math_supplement.h"
+#include "state.h"
+
+namespace IIR {
 
 /***
  * Base for filters designed via algorithmic placement of poles and zeros.
@@ -47,28 +47,27 @@ namespace Iir {
 /**
  * Factored implementations to reduce template instantiations
  **/
-class DllExport PoleFilterBase2 : public Cascade
-{
+class PoleFilterBase2 : public Cascade {
 public:
-  // This gets the poles/zeros directly from the digital
-  // prototype. It is used to double check the correctness
-  // of the recovery of pole/zeros from biquad coefficients.
-  //
-  // It can also be used to accelerate the interpolation
-  // of pole/zeros for parameter modulation, since a pole
-  // filter already has them calculated
+    // This gets the poles/zeros directly from the digital
+    // prototype. It is used to double check the correctness
+    // of the recovery of pole/zeros from biquad coefficients.
+    //
+    // It can also be used to accelerate the interpolation
+    // of pole/zeros for parameter modulation, since a pole
+    // filter already has them calculated
 
-  std::vector<PoleZeroPair> getPoleZeros () const
-  {
-    std::vector<PoleZeroPair> vpz;
-    const int pairs = (m_digitalProto.getNumPoles () + 1) / 2;
-    for (int i = 0; i < pairs; ++i)
-      vpz.push_back (m_digitalProto[i]);
-    return vpz;
-  }
+    std::vector<PoleZeroPair> getPoleZeros() const {
+        std::vector<PoleZeroPair> vpz;
+        const int pairs = (m_digitalProto.getNumPoles() + 1) / 2;
+        for (int i = 0; i < pairs; ++i) {
+            vpz.push_back(m_digitalProto[i]);
+        }
+        return vpz;
+    }
 
 protected:
-  LayoutBase m_digitalProto;
+    LayoutBase m_digitalProto;
 };
 
 
@@ -76,19 +75,16 @@ protected:
  * Serves a container to hold the analog prototype
  * and the digital pole/zero layout.
  **/
-template <class AnalogPrototype>
-class DllExport PoleFilterBase : public PoleFilterBase2
-{
+template<class AnalogPrototype>
+class PoleFilterBase : public PoleFilterBase2 {
 protected:
-  void setPrototypeStorage (const LayoutBase& analogStorage,
-                            const LayoutBase& digitalStorage)
-  {
-    m_analogProto.setStorage (analogStorage);
-    m_digitalProto = digitalStorage;
-  }
+    void setPrototypeStorage(const LayoutBase &analogStorage, const LayoutBase &digitalStorage) {
+        m_analogProto.setStorage(analogStorage);
+        m_digitalProto = digitalStorage;
+    }
 
 protected:
-  AnalogPrototype m_analogProto;
+    AnalogPrototype m_analogProto;
 };
 
 //------------------------------------------------------------------------------
@@ -96,24 +92,18 @@ protected:
 /**
  * Storage for pole filters
  **/
-template <class BaseClass,
-	  class StateType,
-          int MaxAnalogPoles,
-	  int MaxDigitalPoles = MaxAnalogPoles>
-	struct PoleFilter : BaseClass
-	, CascadeStages <(MaxDigitalPoles + 1) / 2 , StateType>
-{
-  PoleFilter ()
-  {
-    // This glues together the factored base classes
-    // with the templatized storage classes.
-    BaseClass::setCascadeStorage (this->getCascadeStorage());
-    BaseClass::setPrototypeStorage (m_analogStorage, m_digitalStorage);
-  }
+template<class BaseClass, class StateType, int MaxAnalogPoles, int MaxDigitalPoles = MaxAnalogPoles>
+struct PoleFilter : BaseClass, CascadeStages<(MaxDigitalPoles + 1) / 2, StateType> {
+    PoleFilter() {
+        // This glues together the factored base classes
+        // with the templatized storage classes.
+        BaseClass::setCascadeStorage(this->getCascadeStorage());
+        BaseClass::setPrototypeStorage(m_analogStorage, m_digitalStorage);
+    }
 
 private:
-  Layout <MaxAnalogPoles> m_analogStorage;
-  Layout <MaxDigitalPoles> m_digitalStorage;
+    Layout<MaxAnalogPoles> m_analogStorage;
+    Layout<MaxDigitalPoles> m_digitalStorage;
 };
 
 //------------------------------------------------------------------------------
@@ -132,17 +122,14 @@ private:
 /**
  * low pass to low pass
  **/
-class DllExport LowPassTransform
-{
+class LowPassTransform {
 public:
-  LowPassTransform (double fc,
-                    LayoutBase& digital,
-                    LayoutBase const& analog);
+    LowPassTransform(double fc, LayoutBase &digital, LayoutBase const &analog);
 
 private:
-  complex_t transform (complex_t c);
+    complex_t transform(complex_t c);
 
-  double f;
+    double f;
 };
 
 //------------------------------------------------------------------------------
@@ -150,17 +137,14 @@ private:
 /**
  * low pass to high pass
  **/
-class DllExport HighPassTransform
-{
+class HighPassTransform {
 public:
-  HighPassTransform (double fc,
-                     LayoutBase& digital,
-                     LayoutBase const& analog);
+    HighPassTransform(double fc, LayoutBase &digital, LayoutBase const &analog);
 
 private:
-  complex_t transform (complex_t c);
+    complex_t transform(complex_t c);
 
-  double f;
+    double f;
 };
 
 //------------------------------------------------------------------------------
@@ -168,26 +152,22 @@ private:
 /**
  * low pass to band pass transform
  **/
-class DllExport BandPassTransform
-{
+class BandPassTransform {
 
 public:
-  BandPassTransform (double fc,
-                     double fw,
-                     LayoutBase& digital,
-                     LayoutBase const& analog);
+    BandPassTransform(double fc, double fw, LayoutBase &digital, LayoutBase const &analog);
 
 private:
-  ComplexPair transform (complex_t c);
+    ComplexPair transform(complex_t c);
 
-  double wc;
-  double wc2;
-  double a;
-  double b;
-  double a2;
-  double b2;
-  double ab;
-  double ab_2;
+    double wc;
+    double wc2;
+    double a;
+    double b;
+    double a2;
+    double b2;
+    double ab;
+    double ab_2;
 };
 
 //------------------------------------------------------------------------------
@@ -195,25 +175,19 @@ private:
 /**
  * low pass to band stop transform
  **/
-class DllExport BandStopTransform
-{
+class BandStopTransform {
 public:
-  BandStopTransform (double fc,
-                     double fw,
-                     LayoutBase& digital,
-                     LayoutBase const& analog);
+    BandStopTransform(double fc, double fw, LayoutBase &digital, LayoutBase const &analog);
 
 private:
-  ComplexPair transform (complex_t c);
+    ComplexPair transform(complex_t c);
 
-  double wc;
-  double wc2;
-  double a;
-  double b;
-  double a2;
-  double b2;
+    double wc;
+    double wc2;
+    double a;
+    double b;
+    double a2;
+    double b2;
 };
 
-}
-
-#endif
+} // namespace IIR

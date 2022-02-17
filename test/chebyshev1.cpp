@@ -1,4 +1,4 @@
-#include "Iir.h"
+#include "iir.h"
 
 #define _USE_MATH_DEFINES
 #include <stdio.h>
@@ -9,7 +9,7 @@
 int main(int, char**)
 {
 	const int order = 3;
-	Iir::ChebyshevI::HighPass<order> f;
+	IIR::ChebyshevI::HighPass<order> f;
 	const float samplingrate = 1000; // Hz
 	const float cutoff_frequency = 5; // Hz
 	f.setup(samplingrate, cutoff_frequency, 1);
@@ -24,7 +24,7 @@ int main(int, char**)
 	//fprintf(stderr,"%e\n",b);
 	assert_print(fabs(b) < 1E-15, "Highpass value for t->inf to high!");
 
-	Iir::ChebyshevI::BandStop<4, Iir::DirectFormI> bs;
+	IIR::ChebyshevI::BandStop<4, IIR::DirectFormI> bs;
 	const float center_frequency = 50;
 	const float frequency_width = 5;
 	bs.setup(samplingrate, center_frequency, frequency_width, 1);
@@ -40,7 +40,7 @@ int main(int, char**)
 	//fprintf(stderr,"%e\n",b);
 	assert_print(fabs(b) < 1E-15, "Bandstop value for t->inf to high!");
 
-	Iir::ChebyshevI::LowPass<8> lp_cheby1;
+	IIR::ChebyshevI::LowPass<8> lp_cheby1;
 	const float pass_ripple_db2 = 1; // dB
 	double norm_cutoff_frequency = 0.01;
 	lp_cheby1.setupN(norm_cutoff_frequency,

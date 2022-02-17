@@ -24,24 +24,37 @@
  * THE SOFTWARE.
  **/
 
-#ifndef IIR_H
-#define IIR_H
+#pragma once
 
-//
-// Include this file in your application to get everything
-//
+#include <cstdlib>
 
-#include "iir_filter/Common.h"
+#include <cassert>
+#include <cfloat>
+#include <cmath>
+#include <complex>
+#include <cstring>
+#include <limits>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
-#include "iir_filter/Biquad.h"
-#include "iir_filter/Cascade.h"
-#include "iir_filter/PoleFilter.h"
-#include "iir_filter/State.h"
+static const char orderTooHigh[] =
+    "Requested order is too high. Provide a higher order for the template.";
 
-#include "iir_filter/Butterworth.h"
-#include "iir_filter/ChebyshevI.h"
-#include "iir_filter/ChebyshevII.h"
-#include "iir_filter/Custom.h"
-#include "iir_filter/RBJ.h"
+#define DEFAULT_FILTER_ORDER 4
 
+/**
+ * @brief Throw invalid argument exception if exceptions are enabled, otherwise abort.
+ *
+ * @param msg Error message
+ */
+inline void throw_invalid_argument(const char *msg) {
+
+#if __cpp_exceptions
+    throw std::invalid_argument(msg);
+#else
+    fprintf(stderr, "%s\n", msg);
+    // (void) msg; // Discard parameter
+    // abort();
 #endif
+}

@@ -1,4 +1,4 @@
-#include "Iir.h"
+#include "iir.h"
 
 #include <stdio.h>
 #include<iostream>
@@ -50,7 +50,7 @@ void assert_double(const double a, const double b) {
 void test1 () {
 	fprintf(stderr,"2nd order test, DirectFormI\n");
         const int nSOS = 1;
-        Iir::Custom::SOSCascade<nSOS,Iir::DirectFormI> cust(coeff1);
+        IIR::Custom::SOSCascade<nSOS,IIR::DirectFormI> cust(coeff1);
 	int i = 0;
 	for(auto &v:input1) {
 		assert_double(cust.filter(v),result1[i++]);
@@ -60,7 +60,7 @@ void test1 () {
 void test2 () {
 	fprintf(stderr,"2nd order test, DirectFormII\n");
         const int nSOS = 1;
-        Iir::Custom::SOSCascade<nSOS,Iir::DirectFormII> cust(coeff1);
+        IIR::Custom::SOSCascade<nSOS,IIR::DirectFormII> cust(coeff1);
 	int i = 0;
 	for(auto &v:input1) {
 		assert_double(cust.filter(v),result1[i++]);
@@ -70,7 +70,7 @@ void test2 () {
 void test3() {
 	fprintf(stderr,"4th order test, DirectFormI\n");
         const int nSOS = 2;
-        Iir::Custom::SOSCascade<nSOS,Iir::DirectFormI> cust(coeff2);
+        IIR::Custom::SOSCascade<nSOS,IIR::DirectFormI> cust(coeff2);
 	int i = 0;
 	for(auto &v:input2) {
 		assert_double(cust.filter(v),result2[i++]);
@@ -80,7 +80,7 @@ void test3() {
 void test4() {
 	fprintf(stderr,"4th order test, DirectFormII\n");
         const int nSOS = 2;
-        Iir::Custom::SOSCascade<nSOS,Iir::DirectFormII> cust(coeff2);
+        IIR::Custom::SOSCascade<nSOS,IIR::DirectFormII> cust(coeff2);
 	int i = 0;
 	for(auto &v:input2) {
 		assert_double(cust.filter(v),result2[i++]);

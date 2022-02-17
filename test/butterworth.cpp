@@ -1,4 +1,4 @@
-#include "Iir.h"
+#include "iir.h"
 
 #define _USE_MATH_DEFINES
 #include <stdio.h>
@@ -9,7 +9,7 @@
 int main(int, char**)
 {
 	// create the filter structure for 3rd order
-	Iir::Butterworth::LowPass<3> f;
+	IIR::Butterworth::LowPass<3> f;
 
 	// filter parameters
 	const float samplingrate = 1000; // Hz
@@ -33,7 +33,7 @@ int main(int, char**)
 	}
 	assert_print(fabs(b) < 1E-25, "Lowpass value for t->inf to high!");
 
-	Iir::Butterworth::BandStop<4, Iir::DirectFormI> bs;
+	IIR::Butterworth::BandStop<4, IIR::DirectFormI> bs;
 	const float center_frequency = 50;
 	const float frequency_width = 5;
 	bs.setup(samplingrate, center_frequency, frequency_width);
@@ -49,7 +49,7 @@ int main(int, char**)
 	assert_print(fabs(b) < 1E-25, "Bandstop value for t->inf to high!");
 
 
-	Iir::Butterworth::BandStop<4> bs2;
+	IIR::Butterworth::BandStop<4> bs2;
 	const double norm_center_frequency = 0.1019;
 	const double norm_frequency_width = 0.01;
 	bs2.setupN(norm_center_frequency, norm_frequency_width);
@@ -61,7 +61,7 @@ int main(int, char**)
 		}
 	}
 
-	Iir::Butterworth::LowPass<8> lp2;
+	IIR::Butterworth::LowPass<8> lp2;
 	double norm_cutoff_frequency = 0.01;
 	lp2.setupN(norm_cutoff_frequency);
 	double norm_signal_frequency = 0.09;
@@ -73,7 +73,7 @@ int main(int, char**)
 		}
 	}
 
-	Iir::Butterworth::HighPass<8> hp2;
+	IIR::Butterworth::HighPass<8> hp2;
 	norm_cutoff_frequency = 0.05;
 	hp2.setupN(norm_cutoff_frequency);
 	norm_signal_frequency = 0.005;

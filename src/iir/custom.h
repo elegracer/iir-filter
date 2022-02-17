@@ -24,17 +24,17 @@
  * THE SOFTWARE.
  **/
 
-#ifndef IIR1_CUSTOM_H
-#define IIR1_CUSTOM_H
+#pragma once
 
-#include "Common.h"
-#include "Biquad.h"
-#include "Cascade.h"
-#include "PoleFilter.h"
-#include "State.h"
+#include "common.h"
+
+#include "biquad.h"
+#include "cascade.h"
+#include "pole_filter.h"
+#include "state.h"
 
 
-namespace Iir {
+namespace IIR {
 
 /**
  * Single pole, Biquad and cascade of Biquads with parameters allowing
@@ -49,11 +49,8 @@ namespace Custom {
  * \param pole Position of the pole on the real axis
  * \param zero Position of the zero on the real axis
  **/
-struct OnePole : public Biquad
-{
-	void setup (double scale,
-		    double pole,
-		    double zero);
+struct OnePole : public Biquad {
+    void setup(double scale, double pole, double zero);
 };
 
 /**
@@ -63,13 +60,8 @@ struct OnePole : public Biquad
  * \param zeroRho Radius of the zero
  * \param zeroTheta Angle of the zero
  **/
-struct TwoPole : public Biquad
-{
-	void setup (double scale,
-		    double poleRho,
-		    double poleTheta,
-		    double zeroRho,
-		    double zeroTheta);
+struct TwoPole : public Biquad {
+    void setup(double scale, double poleRho, double poleTheta, double zeroRho, double zeroTheta);
 };
 
 /**
@@ -77,44 +69,41 @@ struct TwoPole : public Biquad
  * \param NSOS The number of 2nd order filters / biquads.
  * \param StateType The filter topology: DirectFormI, DirectFormII, ...
  **/
-template <int NSOS, class StateType = DEFAULT_STATE>
-struct DllExport SOSCascade : CascadeStages<NSOS,StateType>
-{
-	/**
+template<int NSOS, class StateType = DEFAULT_STATE>
+struct SOSCascade : CascadeStages<NSOS, StateType> {
+    /**
 	 * Default constructor which creates a unity gain filter of NSOS biquads.
 	 * Set the filter coefficients later with the setup() method.
 	 **/
-	SOSCascade() {};
-	/**
-         * Python scipy.signal-friendly setting of coefficients.
+    SOSCascade() {};
+    /**
+     * Python scipy.signal-friendly setting of coefficients.
 	 * Initialises the coefficients of the whole chain of
 	 * biquads / SOS. The argument is a 2D array where the 1st
-         * dimension holds an array of 2nd order biquad / SOS coefficients.
-         * The six SOS coefficients are ordered "Python" style with first
-         * the FIR coefficients (B) and then the IIR coefficients (A).
-         * The 2D const double array needs to have exactly the size [NSOS][6].
+     * dimension holds an array of 2nd order biquad / SOS coefficients.
+     * The six SOS coefficients are ordered "Python" style with first
+     * the FIR coefficients (B) and then the IIR coefficients (A).
+     * The 2D const double array needs to have exactly the size [NSOS][6].
 	 * \param sosCoefficients 2D array Python style sos[NSOS][6]. Indexing: 0-2: FIR-, 3-5: IIR-coefficients.
 	 **/
-	SOSCascade(const double (&sosCoefficients)[NSOS][6]) {
-		CascadeStages<NSOS,StateType>::setup(sosCoefficients);
-	};
-	/**
-         * Python scipy.signal-friendly setting of coefficients.
+    SOSCascade(const double (&sosCoefficients)[NSOS][6]) {
+        CascadeStages<NSOS, StateType>::setup(sosCoefficients);
+    };
+    /**
+     * Python scipy.signal-friendly setting of coefficients.
 	 * Sets the coefficients of the whole chain of
 	 * biquads / SOS. The argument is a 2D array where the 1st
-         * dimension holds an array of 2nd order biquad / SOS coefficients.
-         * The six SOS coefficients are ordered "Python" style with first
-         * the FIR coefficients (B) and then the IIR coefficients (A).
-         * The 2D const double array needs to have exactly the size [NSOS][6].
+     * dimension holds an array of 2nd order biquad / SOS coefficients.
+     * The six SOS coefficients are ordered "Python" style with first
+     * the FIR coefficients (B) and then the IIR coefficients (A).
+     * The 2D const double array needs to have exactly the size [NSOS][6].
 	 * \param sosCoefficients 2D array Python style sos[NSOS][6]. Indexing: 0-2: FIR-, 3-5: IIR-coefficients.
 	 **/
-	void setup (const double (&sosCoefficients)[NSOS][6]) {
-		CascadeStages<NSOS,StateType>::setup(sosCoefficients);
-	}
+    void setup(const double (&sosCoefficients)[NSOS][6]) {
+        CascadeStages<NSOS, StateType>::setup(sosCoefficients);
+    }
 };
 
-}
+} // namespace Custom
 
-}
-
-#endif
+} // namespace IIR

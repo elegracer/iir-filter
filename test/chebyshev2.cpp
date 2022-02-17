@@ -1,4 +1,4 @@
-#include "Iir.h"
+#include "iir.h"
 
 #define _USE_MATH_DEFINES
 #include <stdio.h>
@@ -12,7 +12,7 @@ int main(int, char**)
 	// underutilised filter deals with it.
 	const int order = 3;
 
-	Iir::ChebyshevII::BandPass<order> f;
+	IIR::ChebyshevII::BandPass<order> f;
 
 	const float samplingrate = 1000; // Hz
 	f.setup(samplingrate, 100, 10, 20);
@@ -28,7 +28,7 @@ int main(int, char**)
 	//fprintf(stderr,"%e\n",b);
 	assert_print(fabs(b) < 1E-15, "Lowpass value for t->inf to high!");
 
-	Iir::ChebyshevII::BandStop<4, Iir::DirectFormI> bs;
+	IIR::ChebyshevII::BandStop<4, IIR::DirectFormI> bs;
 	const float center_frequency = 50;
 	const float frequency_width = 5;
 	bs.setup(samplingrate, center_frequency, frequency_width, 20);
@@ -45,7 +45,7 @@ int main(int, char**)
 	//fprintf(stderr,"%e\n",b);
 
 
-	Iir::ChebyshevII::HighPass<8> hp_cheby2;
+	IIR::ChebyshevII::HighPass<8> hp_cheby2;
 	double stop_ripple_dB = 80;
 	// Setting cutoff to normalised f=0.1
 	double normalised_cutoff_freq = 0.1;
