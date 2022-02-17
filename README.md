@@ -29,7 +29,7 @@ can optimise both filter code and main program at the same time.
 ## C++ code
 Add the following include statement to your code:
 ```
-#include "iir.h"
+#include "iir/iir.h"
 ```
 
 The general coding approach is that first the filter is

@@ -1,6 +1,6 @@
 // Usage Examples
 //
-#include "iir.h"
+#include "iir/iir.h"
 
 #include <stdio.h>
 

@@ -26,8 +26,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(IIR_SOURCES
     #
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir.h
-    #
     ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/biquad.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/biquad.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/butterworth.cpp
@@ -41,6 +39,7 @@ set(IIR_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/common.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/custom.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/custom.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/iir.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/layout.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/math_supplement.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/iir/pole_filter.cpp

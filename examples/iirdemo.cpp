@@ -4,7 +4,7 @@
 //
 
 // This is the only include you need
-#include "iir.h"
+#include "iir/iir.h"
 
 #include <stdio.h>
 

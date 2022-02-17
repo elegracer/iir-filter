@@ -26,15 +26,15 @@
 
 #pragma once
 
-#include "iir/common.h"
+#include "common.h"
 
-#include "iir/biquad.h"
-#include "iir/cascade.h"
-#include "iir/pole_filter.h"
-#include "iir/state.h"
+#include "biquad.h"
+#include "cascade.h"
+#include "pole_filter.h"
+#include "state.h"
 
-#include "iir/butterworth.h"
-#include "iir/chebyshev_i.h"
-#include "iir/chebyshev_ii.h"
-#include "iir/custom.h"
-#include "iir/rbj.h"
+#include "butterworth.h"
+#include "chebyshev_i.h"
+#include "chebyshev_ii.h"
+#include "custom.h"
+#include "rbj.h"
